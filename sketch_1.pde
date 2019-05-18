@@ -77,3 +77,11 @@ void createFile(File f){
     e.printStackTrace();
     }
 }
+
+boolean isNumber(String str) {
+  boolean isNumber = true;
+  char[] ch = str.toCharArray();
+  for (int i = 0; i < ch.length; i++) {
+  isNumber = Character.isDigit(ch[i]);
+  return isNumber;
+}
