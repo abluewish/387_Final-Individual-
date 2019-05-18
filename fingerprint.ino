@@ -3,7 +3,6 @@
 
 // On Leonardo/Micro or others with hardware serial, use those! #0 is green wire, #1 is white
 // uncomment this line:
-// #define mySerial Serial1
 
 // For UNO and others without hardware serial, we must use software serial...
 // pin #2 is IN from sensor (GREEN wire)
@@ -53,35 +52,37 @@ void setup()
 void loop()                     // run over and over again
 {
   getFingerprintIDez();
-  delay(50);            //don't ned to run this at full speed.
-
+  delay(500);            //don't ned to run this at full speed.
+  
   if(getFingerprintIDez()==-1){
+    Serial.println("No record of this fingerprint");
     digitalWrite(greenled, LOW);
     digitalWrite(redled, HIGH);
-    delay(300);
-    digitalWrite(redled, LOW);
-    delay(300);
-    digitalWrite(redled, HIGH);
-    delay(300);
-    digitalWrite(redled, LOW);
   }
   else{
-    digitalWrite(greenled, LOW);
-    button_r=0;
-    button_r=digitalRead(start);
-    if(button_r==1){
-      delay(10);
-      button_stop=0;
-      while(button_stop==0){
-        motorOn();
-        delay(100);
-        button_stop=digitalRead(cancel);
-        if(button_stop==1){
-          break;
+    Serial.println("It is a valid fingerprint");
+    delay(1000);
+    digitalWrite(greenled, HIGH);
+    digitalWrite(redled, LOW);
+    int i=0;
+    while(i<=10){
+      button_r=0;
+      button_r=digitalRead(start);
+      if(button_r==1){
+        delay(10);
+        button_stop=0;
+        while(button_stop==0){
+          motorOn();
+          delay(100);
+          button_stop=digitalRead(cancel);
+          if(button_stop==1){
+            digitalWrite(motorPin,HIGH);
+            break;
+          }
         }
-
       }
-      
+      delay(1000);
+      i++;
     }
   }
   digitalWrite(12,HIGH);
@@ -173,7 +174,12 @@ int getFingerprintIDez() {
 //the code make the tredmill run
 
 void motorOn(){
-  int onTime=500;
-  digitalWrite(motorPin,HIGH);
+  int onTime = 2500; //to avoid transistor being too hot which is the problem I am going to solve
+  int offTime = 500;
+
+  digitalWrite(motorPin, HIGH);
   delay(onTime);
+  digitalWrite(motorPin, LOW);
+  delay(offTime);
+  Serial.println("Motor is running");
 }
