@@ -23,7 +23,7 @@ void draw() {
 
 void serialEvent (Serial myPort){
  sensorReading = myPort.readStringUntil('\n');
-  if(sensorReading != null){
+  if(sensorReading != null && isNumber(sensorReading)){
     sensorReading=trim(sensorReading);
     timestamp=year()+"/"+month()+"/"+day()+" "+hour()+":"+minute()+":"+second()+"," ;
     datestamp=year()*10000+month()*100+day();
