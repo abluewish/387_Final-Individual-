@@ -23,18 +23,17 @@ void draw() {
 
 void serialEvent (Serial myPort){
  sensorReading = myPort.readStringUntil('\n');
-  if(sensorReading != null && isNumber(sensorReading)){
+  if(sensorReading != null){
     sensorReading=trim(sensorReading);
     timestamp=year()+"/"+month()+"/"+day()+" "+hour()+":"+minute()+":"+second()+"," ;
-    datestamp=year()*10000+month()*100+day();
-    minutestamp=hour()*60+minute();
   }
   // make a timestamp
   
-
-  writeText("Sensor Reading: " + timestamp + String.valueOf(datestamp) + String.valueOf(minutestamp) + sensorReading);//String.valueOf(datestamp) + String.valueOf(minutestamp) +
   
-  appendTextToFile(outFilename, timestamp + String.valueOf(datestamp) + String.valueOf(minutestamp) + sensorReading);//String.valueOf(datestamp) + String.valueOf(minutestamp) +
+  if(isNumber(sensorReading)){
+    writeText("Sensor Reading: " + timestamp + sensorReading);//String.valueOf(datestamp) + String.valueOf(minutestamp) +
+    appendTextToFile(outFilename, timestamp + sensorReading);//String.valueOf(datestamp) + String.valueOf(minutestamp) +
+  }
 
 }
 
@@ -82,7 +81,10 @@ boolean isNumber(String str) {
   boolean isNumber = true;
   char[] ch = str.toCharArray();
   for (int i = 0; i < ch.length; i++) {
-  isNumber = Character.isDigit(ch[i]);
-  return isNumber;
+    isNumber = Character.isDigit(ch[i]);
+    if(!isNumber){
+      return false;
+    }
   }
+  return true;
 }
