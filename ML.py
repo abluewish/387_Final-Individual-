@@ -3,7 +3,7 @@ import numpy as np
 
 
 
-# Your code here
+# Something still needs to do on data set
 def blight_model():
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.model_selection import train_test_split
