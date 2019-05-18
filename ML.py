@@ -1,11 +1,28 @@
-import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
-
-np.random.seed(0)
-n = 15
-x = np.linspace(0,10,n) + np.random.randn(n)/5
-y = np.sin(x)+x/6 + np.random.randn(n)/10
+import numpy as np
 
 
-X_train, X_test, y_train, y_test = train_test_split(x, y, random_state=0)
+
+# Your code here
+def model():
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import roc_auc_score
+    
+    train_data=pd.read_csv('./train.csv',encoding = 'ISO-8859-1' )
+    train_data=train_data[pd.notnull(train_data.compliance)]
+    test_data=pd.read_csv('./test.csv',encoding='ISO-8859-1')
+    test_data=test_data.set_index('ticket_id')
+    
+    target=['compliance']
+    
+    features=['admin_fee',
+     'state_fee',
+     'late_fee',
+     'discount_amount',
+     'judgment_amount',]
+    clf =RandomForestClassifier(n_estimators=100,max_depth=8,random_state=0)
+    X_train,X_valid,y_train,y_valid = train_test_split(train_data[features],train_data[target],test_size= 0.2,)
+    clf.fit(train_data[features],train_data[target])
+    test_data['compliance'] = clf.predict_proba(test_data[features])[:,1]
+    return test_data['compliance']
