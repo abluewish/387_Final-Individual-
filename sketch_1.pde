@@ -84,4 +84,5 @@ boolean isNumber(String str) {
   for (int i = 0; i < ch.length; i++) {
   isNumber = Character.isDigit(ch[i]);
   return isNumber;
+  }
 }
